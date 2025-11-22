@@ -7,6 +7,7 @@ namespace Activation.Derivs
     {
         private static Random? _rnd;
         private static double? _rnd_base;
+
         public static double Havyside(double x) => x >= 0 ? 1.0 : 0.0;
         public static double Havyside(double x, double zero_val) => x == 0 ? zero_val : (x >= 0 ? 1.0 : 0.0);
         public static double H(double x) => Havyside(x);
@@ -38,5 +39,14 @@ namespace Activation.Derivs
         }
         public static double ReLU(double x) => x >= 0 ? 1.0 : 0.0;
         public static double LReLU(double x) => x >= 0 ? 1.0 : 0.01;
+        public static double PReLU(double x, double A) => x >= 0 ? 1.0 : A;
+        public static double RReLU(double x, double highBound)
+        {
+            _rnd ??= new Random();
+            _rnd_base = highBound;
+            var A = _rnd.NextDouble() * (_rnd_base - 0.001) + 0.001; // A is [0.001, highBound]
+            return x >= 0 ? 1.0 : (double)A;
+        }
+        
     }
 }
